@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import re
+import sys
 from argparse import ArgumentParser
 from urllib.parse import urlsplit, parse_qs, urlparse, unquote
 from pathlib import PurePosixPath
@@ -147,6 +148,10 @@ def main() -> None:
     parser.add_argument("-f", "--file", dest="file", help="File containing list of URLs")
 
     args = parser.parse_args()
+
+    if len(sys.argv) < 2:
+        parser.print_help()
+        exit(1)
 
     if args.file is not None:
         with open(args.file, "r") as input_file:
