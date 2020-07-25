@@ -10,10 +10,12 @@ This program parses URLs from a given file and outputs interesting URLs.
 ### Usage information
 
 ```
-% python3 interesting-urls.py 
-usage: interesting-urls.py [-h] [-f FILE]
+% python3 interesting-urls.py -h
+usage: interesting-urls.py [-h] -f FILE [-u UNKNOWN]
 
 optional arguments:
   -h, --help            show this help message and exit
   -f FILE, --file FILE  File containing list of URLs
+  -u UNKNOWN, --unknown UNKNOWN
+                        Print unknown extensions of URLs
 ```
