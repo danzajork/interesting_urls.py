@@ -238,7 +238,7 @@ def main() -> None:
     """
     parser = ArgumentParser()
     parser.add_argument("-f", "--file", dest="file", help="File containing list of URLs", required=True)
-    parser.add_argument("-j", "--js". dest="js", help="Just kidding! I want all js files")
+    parser.add_argument("-j", "--js", dest="js", help="Just kidding! I want all js files")
     parser.add_argument("-u", "--unknown", dest="unknown", help="Print unknown extensions")
 
     args = parser.parse_args()
