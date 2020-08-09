@@ -10,12 +10,13 @@ This program parses URLs from a given file and outputs interesting URLs.
 ### Usage information
 
 ```
-% python3 interesting-urls.py -h
-usage: interesting-urls.py [-h] -f FILE [-u UNKNOWN]
+% python3 interesting-urls.py -h                
+usage: interesting-urls.py [-h] -f FILE [-j JS] [-u UNKNOWN]
 
 optional arguments:
   -h, --help            show this help message and exit
   -f FILE, --file FILE  File containing list of URLs
+  -j JS, --js JS        Just kidding! I want all js files
   -u UNKNOWN, --unknown UNKNOWN
-                        Print unknown extensions of URLs
+                        Print unknown extensionsf URLs
 ```
