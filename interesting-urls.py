@@ -5,40 +5,39 @@ from argparse import ArgumentParser
 from urllib.parse import urlsplit, urlunsplit, parse_qs, urlparse, unquote
 from pathlib import PurePosixPath
 
-
 extensions = [".cs",
-                  ".vb",
-                  ".cgi",
-                  ".pl",
-                  ".json",
-                  ".xml",
-                  ".rb",
-                  ".py",
-                  ".sh",
-                  ".yaml",
-                  ".yml",
-                  ".ini",
-                  ".md",
-                  ".mkd",
-                  ".config",
-                  ".conf",
-                  ".cfg",
-                  ".ps1",
-                  ".bat"]
+              ".vb",
+              ".cgi",
+              ".pl",
+              ".json",
+              ".xml",
+              ".rb",
+              ".py",
+              ".sh",
+              ".yaml",
+              ".yml",
+              ".ini",
+              ".md",
+              ".mkd",
+              ".config",
+              ".conf",
+              ".cfg",
+              ".ps1",
+              ".bat"]
 
 static_extensions = [".js",
-                  ".html",
-                  ".htm",
-                  ".svg",
-                  ".eot",
-                  ".ttf",
-                  ".woff",
-                  ".woff2",
-                  ".png",
-                  ".jpg",
-                  ".jpeg",
-                  ".gif",
-                  ".ico"]
+                     ".html",
+                     ".htm",
+                     ".svg",
+                     ".eot",
+                     ".ttf",
+                     ".woff",
+                     ".woff2",
+                     ".png",
+                     ".jpg",
+                     ".jpeg",
+                     ".gif",
+                     ".ico"]
 
 
 def remove_query_params_and_fragment(url):
@@ -158,7 +157,7 @@ def is_unknown_extension(url) -> bool:
     last_element = url_paths[-1]
 
     # no extension, ends with path
-    if not "." in last_element:
+    if "." not in last_element:
         return False
 
     for ext in extensions:
@@ -171,6 +170,32 @@ def is_unknown_extension(url) -> bool:
     return True
 
 
+def is_js_extension(url) -> bool:
+    url = remove_query_params_and_fragment(url)
+
+    url_paths = PurePosixPath(
+        unquote(
+            urlparse(
+                url
+            ).path
+        )
+    ).parts
+
+    if not url_paths:
+        return False
+
+    last_element = url_paths[-1]
+
+    # no extension, ends with path
+    if "." not in last_element:
+        return False
+
+    if url.endswith(".js"):
+        return True
+
+    return False
+
+
 def find_unknown_extensions(urls) -> None:
     for url in urls:
 
@@ -178,6 +203,15 @@ def find_unknown_extensions(urls) -> None:
         parsed_url = parsed_url.lower().strip('\n')
 
         if is_unknown_extension(parsed_url):
+            print(parsed_url)
+
+def find_js_extensions(urls) -> None:
+    for url in urls:
+
+        parsed_url = re.search("(?P<url>https?://[^\s]+)", url).group("url")
+        parsed_url = parsed_url.lower().strip('\n')
+
+        if is_js_extension(parsed_url):
             print(parsed_url)
 
 
@@ -204,6 +238,7 @@ def main() -> None:
     """
     parser = ArgumentParser()
     parser.add_argument("-f", "--file", dest="file", help="File containing list of URLs", required=True)
+    parser.add_argument("-j", "--js". dest="js", help="Just kidding! I want all js files")
     parser.add_argument("-u", "--unknown", dest="unknown", help="Print unknown extensions")
 
     args = parser.parse_args()
@@ -215,7 +250,9 @@ def main() -> None:
     with open(args.file, "r") as input_file:
         urls = input_file.readlines()
 
-    if args.unknown is not None:
+    if args.js is not None:
+        find_js_extensions(urls)
+    elif args.unknown is not None:
         find_unknown_extensions(urls)
     else:
         search_urls(urls)
