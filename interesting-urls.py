@@ -9,7 +9,7 @@ extensions = [".cs",
               ".vb",
               ".cgi",
               ".pl",
-              ".json",
+              "config.json",
               ".xml",
               ".rb",
               ".py",
@@ -23,10 +23,37 @@ extensions = [".cs",
               ".conf",
               ".cfg",
               ".ps1",
-              ".bat"]
+              ".bat",
+              ".log",
+              ".gem",
+              ".txt",
+              ".csv",
+              ".sql",
+              ".bak",
+              ".backup",
+              ".db",
+              ".dump",
+              ".old",
+              ".tmp",
+              ".temp",
+              ".access",
+              ".aws",
+              ".s3cfg",
+              ".git",
+              ".gitconfig",
+              ".github",
+              ".docker",
+              ".env",
+              ".test",
+              ".rar",
+              ".raw",
+              ".zip",
+              ".tgz",
+              "config.js",
+              "configuration.js",
+              "constants.js"]
 
-static_extensions = [".js",
-                     ".html",
+static_extensions = [".html",
                      ".htm",
                      ".svg",
                      ".eot",
@@ -61,18 +88,25 @@ def contains_path(url) -> bool:
         "admin",
         "include",
         "src",
-        "redirect",
+        "git",
+        "svn",
+        "cgi-bin",
+        "bin",
         "proxy",
         "test",
         "debug",
         "tmp",
         "temp",
-        "private"]
+        "private",
+        "config",
+        "configuration",
+        "docker",
+        "dockerfile"]
 
     url_paths = PurePosixPath(
         unquote(
             urlparse(
-                url
+                url.lower()
             ).path
         )
     ).parts
@@ -85,8 +119,7 @@ def contains_path(url) -> bool:
 
 
 def has_interesting_query_strings(url) -> bool:
-    keys = ["redirect",
-            "debug",
+    keys = ["debug",
             "password",
             "passwd",
             "file",
@@ -94,8 +127,7 @@ def has_interesting_query_strings(url) -> bool:
             "template",
             "include",
             "require",
-            "url",
-            "uri",
+            "config",
             "src",
             "href",
             "func",
@@ -146,7 +178,7 @@ def is_unknown_extension(url) -> bool:
     url_paths = PurePosixPath(
         unquote(
             urlparse(
-                url
+                url.lower()
             ).path
         )
     ).parts
@@ -176,7 +208,7 @@ def is_js_extension(url) -> bool:
     url_paths = PurePosixPath(
         unquote(
             urlparse(
-                url
+                url.lower()
             ).path
         )
     ).parts
@@ -199,7 +231,11 @@ def is_js_extension(url) -> bool:
 def find_unknown_extensions(urls) -> None:
     for url in urls:
 
-        parsed_url = re.search("(?P<url>https?://[^\s]+)", url).group("url")
+        parsed_url = re.search("(?P<url>https?://[^\s]+)", url)
+        if parsed_url is not None:
+            parsed_url = parsed_url.group("url")
+        else:
+            continue
         parsed_url = parsed_url.lower().strip('\n')
 
         if is_unknown_extension(parsed_url):
@@ -208,7 +244,11 @@ def find_unknown_extensions(urls) -> None:
 def find_js_extensions(urls) -> None:
     for url in urls:
 
-        parsed_url = re.search("(?P<url>https?://[^\s]+)", url).group("url")
+        parsed_url = re.search("(?P<url>https?://[^\s]+)", url)
+        if parsed_url is not None:
+            parsed_url = parsed_url.group("url")
+        else:
+            continue
         parsed_url = parsed_url.lower().strip('\n')
 
         if is_js_extension(parsed_url):
@@ -218,7 +258,11 @@ def find_js_extensions(urls) -> None:
 def search_urls(urls) -> None:
     for url in urls:
 
-        parsed_url = re.search("(?P<url>https?://[^\s]+)", url).group("url")
+        parsed_url = re.search("(?P<url>https?://[^\s]+)", url)
+        if parsed_url is not None:
+            parsed_url = parsed_url.group("url")
+        else:
+            continue
         parsed_url = parsed_url.lower().strip('\n')
 
         if not is_static_file(url):
